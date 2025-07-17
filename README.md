@@ -20,11 +20,7 @@ unsigned long totalSeconds = time / 1000;
 
 
 int seconds, minutes;
-
-
-// void increasSec() {
-//   time+=1000;
-// }
+unsigned long timeStart;
 
 
 void showOnLCD() {
@@ -91,6 +87,28 @@ void setup() {
 void loop() {
   minutes = totalSeconds / 60;
   seconds = totalSeconds % 60;
+
+  if (increasSec == LOW) {
+    time+=1000;
+  }
+
+  if (decreasSec == LOW) {
+    time-=1000;
+  }
+
+  if (increasMin == LOW) {
+    time+=60000;
+  }
+
+  if (decreasMin == LOW) {
+    time-=60000;
+  }
+
+  if (start == LOW) {
+    timeStart = millis();
+    while ()
+  }
+
 
   showOnLCD();
 
