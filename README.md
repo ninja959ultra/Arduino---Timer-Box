@@ -96,7 +96,7 @@ void loop() {
   minutes = totalSeconds / 60;
   seconds = totalSeconds % 60;
 
-  if (digitalRead(increasSec) == LOW) {
+  if (digitalRead(increasSec) == LOW && time < 5999000) {
     time+=1000;
   }
 
@@ -104,7 +104,7 @@ void loop() {
     time-=1000;
   }
 
-  if (digitalRead(increasMin) == LOW) {
+  if (digitalRead(increasMin) == LOW && time < 5939000) {
     time+=60000;
   }
 
