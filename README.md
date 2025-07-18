@@ -20,7 +20,7 @@ unsigned long totalSeconds = time / 1000;
 
 
 int seconds, minutes;
-unsigned long timeStart;
+unsigned long timeStart, lastTime;
 
 
 void showOnLCD() {
@@ -85,29 +85,47 @@ void setup() {
 }
 
 void loop() {
+  totalSeconds = time / 1000;
+
   minutes = totalSeconds / 60;
   seconds = totalSeconds % 60;
 
-  if (increasSec == LOW) {
+  if (digitalRead(increasSec) == LOW) {
     time+=1000;
   }
 
-  if (decreasSec == LOW) {
+  if (digitalRead(decreasSec) == LOW && time > 0) {
     time-=1000;
   }
 
-  if (increasMin == LOW) {
+  if (digitalRead(increasMin) == LOW) {
     time+=60000;
   }
 
-  if (decreasMin == LOW) {
+  if (digitalRead(decreasMin) == LOW && minutes > 0) {
     time-=60000;
   }
 
-  if (start == LOW) {
+  if (digitalRead(start) == LOW) {
     timeStart = millis();
-    while ()
-  }
+    while (time > 0){
+      if (millis() - lastTime > 1000){
+        lastTime = millis();
+        totalSeconds--;
+        minutes = totalSeconds / 60;
+        seconds = totalSeconds % 60;
+        showOnLCD();
+        Serial.print("Minutes= ");
+  Serial.println(minutes);
+  Serial.print("Seconds= ");
+  Serial.println(seconds);
+  Serial.print("Time = ");
+  Serial.println(time);
+      }
+
+    } // End while loop
+
+  } // END start button
 
 
   showOnLCD();
@@ -116,7 +134,9 @@ void loop() {
   Serial.println(minutes);
   Serial.print("Seconds= ");
   Serial.println(seconds);
-  delay(10000);
+  Serial.print("Time = ");
+  Serial.println(time);
+  delay(100);
 }
 
 ```
