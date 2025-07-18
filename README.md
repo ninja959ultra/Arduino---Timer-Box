@@ -15,12 +15,15 @@ byte increasMin = 5;
 byte decreasMin = 6;
 byte start = 4;
 byte blueLED = 7;
+byte buzzer = 8;
 unsigned long time = 50000;
 unsigned long totalSeconds = time / 1000;
+bool isRun = false;
+bool isOpen = false;
 
 
 int seconds, minutes;
-unsigned long timeStart, lastTime;
+unsigned long timeStart, lastTime, openTime;
 
 
 void showOnLCD() {
@@ -79,9 +82,12 @@ void setup() {
 
   lcd.init();
   lcd.backlight();
+  servo.attach(12);
+  servo.write(90);
   Serial.begin(9600);
   lcd.setCursor(5,0);
   lcd.print("00:00");
+  delay(1000);
 }
 
 void loop() {
@@ -108,25 +114,41 @@ void loop() {
 
   if (digitalRead(start) == LOW) {
     timeStart = millis();
-    while (time > 0){
+
+    while (totalSeconds > 0){
       if (millis() - lastTime > 1000){
         lastTime = millis();
         totalSeconds--;
         minutes = totalSeconds / 60;
         seconds = totalSeconds % 60;
         showOnLCD();
-        Serial.print("Minutes= ");
-  Serial.println(minutes);
-  Serial.print("Seconds= ");
-  Serial.println(seconds);
-  Serial.print("Time = ");
-  Serial.println(time);
       }
 
     } // End while loop
 
+    if (totalSeconds == 0 && isOpen == false){
+      openTime = millis();
+      isOpen = true;
+      tone(buzzer, 700, 1000);
+      digitalWrite(blueLED, HIGH);
+      delay(1000);
+      digitalWrite(blueLED, LOW);
+
+      for (byte z=90; z>0; z-=5){
+        servo.write(z);
+        delay(100);
+      }
+
+    }
+
   } // END start button
 
+
+  if (millis() - openTime > 5000 && isOpen == true) {
+    servo.write(90);
+    isOpen = false;
+    delay(500);
+  }
 
   showOnLCD();
 
